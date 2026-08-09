@@ -5,7 +5,7 @@ ASP.NET Core MVC (.NET 10) + EF Core 10 + SQL Server LocalDB cafe management sys
 ## Connection
 
 ```text
-Server=(localdb)\MSSQLLocalDB;Database=FirstDB;Trusted_Connection=True;TrustServerCertificate=True;
+Add your connection string here
 ```
 
 The app initializes missing cafe tables on startup. It preserves an existing `Users` table and adds `Role` and `CreatedAt` when needed.
