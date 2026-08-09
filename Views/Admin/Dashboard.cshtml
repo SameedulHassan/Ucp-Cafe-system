@@ -1,0 +1,31 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+<div class="admin-shell">
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <span class="eyebrow">CONTROL CENTER</span>
+                <h1 class="fw-bold mb-1">Admin Dashboard</h1>
+                <p class="text-muted mb-0">Manage users, menu, availability, reviews and orders.</p>
+            </div>
+            <span class="admin-badge">ADMIN</span>
+        </div>
+
+        <div class="row g-3 mb-5">
+            <div class="col-6 col-lg-3"><div class="stat-card"><span>Users</span><strong>@ViewBag.Users</strong><small>registered</small></div></div>
+            <div class="col-6 col-lg-3"><div class="stat-card"><span>Menu Items</span><strong>@ViewBag.Items</strong><small>listed</small></div></div>
+            <div class="col-6 col-lg-3"><div class="stat-card"><span>Orders</span><strong>@ViewBag.Orders</strong><small>@ViewBag.PendingOrders pending</small></div></div>
+            <div class="col-6 col-lg-3"><div class="stat-card"><span>Sales</span><strong>Rs. @string.Format("{0:N0}", ViewBag.Sales)</strong><small>non-cancelled</small></div></div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4"><a class="admin-tile" asp-action="Users"><span>👥</span><h4>Manage Users</h4><p>View, edit roles and delete users.</p></a></div>
+            <div class="col-md-4"><a class="admin-tile" asp-action="Items"><span>🍔</span><h4>Manage Menu</h4><p>Add, edit, delete and control availability.</p></a></div>
+            <div class="col-md-4"><a class="admin-tile" asp-action="Deals"><span>🎁</span><h4>Manage Deals</h4><p>Create deals by combining multiple menu items and set a special price.</p></a></div>
+            <div class="col-md-4"><a class="admin-tile" asp-action="Orders"><span>📋</span><h4>Manage Orders</h4><p>Update order status from pending to completed.</p></a></div>
+            <div class="col-md-4"><a class="admin-tile" asp-action="Reviews"><span>⭐</span><h4>Manage Reviews</h4><p>Review customer feedback and moderate comments.</p></a></div>
+            <div class="col-md-4"><a class="admin-tile" asp-controller="Cafe" asp-action="Index"><span>👀</span><h4>View Customer Menu</h4><p>See the public cafe experience.</p></a></div>
+        </div>
+    </div>
+</div>

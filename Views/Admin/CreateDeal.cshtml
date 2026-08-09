@@ -1,0 +1,46 @@
+@{
+    ViewData["Title"] = "Create Deal";
+    var items = ViewBag.Items as List<CafeItem> ?? new List<CafeItem>();
+}
+<div class="admin-shell">
+    <div class="container py-5">
+        <div class="form-page">
+            <span class="eyebrow">ADMIN / DEALS</span>
+            <h1>Make a new deal</h1>
+            <p class="text-muted">Select multiple menu items, set their quantities and give the combination one special price.</p>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger">@ViewBag.Error</div>
+            }
+
+            <form method="post" enctype="multipart/form-data" asp-action="CreateDeal">
+                @Html.AntiForgeryToken()
+                <div class="mb-3"><label class="form-label">Deal name</label><input class="form-control" name="name" placeholder="Student Lunch Combo" required /></div>
+                <div class="mb-3"><label class="form-label">Description</label><textarea class="form-control" name="description" rows="3" placeholder="Burger + fries + drink at a special price"></textarea></div>
+                <div class="row g-3">
+                    <div class="col-md-6"><label class="form-label">Deal price (Rs.)</label><input class="form-control" name="dealPrice" type="number" min="1" step="0.01" required /></div>
+                    <div class="col-md-6"><label class="form-label">Deal image</label><input class="form-control" name="image" type="file" accept=".jpg,.jpeg,.png,.webp,.jfif" /></div>
+                </div>
+
+                <h5 class="mt-4 mb-3">Choose items for this deal</h5>
+                <div class="deal-builder">
+                    @foreach (var item in items)
+                    {
+                        <label class="deal-builder-row">
+                            <span class="d-flex align-items-center gap-3">
+                                <input class="form-check-input" type="checkbox" name="itemIds" value="@item.Id" />
+                                <span><strong>@item.Name</strong><small>@item.Category · Rs. @item.Price.ToString("N0")</small></span>
+                            </span>
+                            <input class="form-control deal-qty" type="number" min="1" value="1" name="quantities[@item.Id]" title="Quantity" />
+                        </label>
+                    }
+                </div>
+
+                <div class="form-check my-4"><input class="form-check-input" type="checkbox" name="isActive" value="true" checked /><label class="form-check-label">Show this deal on the customer home page</label></div>
+                <button class="btn btn-gold btn-lg">Create Deal</button>
+                <a class="btn btn-outline-secondary btn-lg" asp-action="Deals">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>

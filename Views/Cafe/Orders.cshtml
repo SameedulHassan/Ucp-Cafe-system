@@ -1,0 +1,38 @@
+@model List<Order>
+@{
+    ViewData["Title"] = "My Orders";
+    var orderItems = ViewBag.OrderItems as List<OrderItem> ?? new List<OrderItem>();
+    var items = ViewBag.Items as Dictionary<int, string> ?? new Dictionary<int, string>();
+}
+<div class="container py-5">
+    <div class="section-heading text-start">
+        <span>YOUR ACTIVITY</span>
+        <h1>My orders</h1>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">🍽️</div>
+            <h3>No orders yet</h3>
+            <a class="btn btn-dark" asp-action="Index">Start ordering</a>
+        </div>
+    }
+    @foreach (var order in Model)
+    {
+        <div class="content-card mb-3">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div><strong>Order #@order.Id</strong><div class="text-muted small">@order.OrderDate.ToString("dd MMM yyyy, hh:mm tt")</div></div>
+                <span class="status-pill">@order.Status</span>
+                <strong>Rs. @order.TotalAmount.ToString("N0")</strong>
+            </div>
+            <hr />
+            <div class="small text-muted">
+                @foreach (var line in orderItems.Where(x => x.OrderId == order.Id))
+                {
+                    <span class="me-3">@line.Quantity × @(items.ContainsKey(line.CafeItemId) ? items[line.CafeItemId] : "Item")</span>
+                }
+            </div>
+        </div>
+    }
+</div>

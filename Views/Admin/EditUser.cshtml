@@ -1,0 +1,20 @@
+@model User
+@{
+    ViewData["Title"] = "Edit User";
+}
+<div class="container py-5">
+    <div class="form-page">
+        <span class="eyebrow">ADMIN / USERS</span>
+        <h1>Edit user</h1>
+        <form method="post" asp-action="EditUser">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <div class="mb-3"><label asp-for="Name" class="form-label"></label><input asp-for="Name" class="form-control" /></div>
+            <div class="mb-3"><label asp-for="Email" class="form-label"></label><input asp-for="Email" class="form-control" /></div>
+            <div class="mb-3"><label asp-for="Password" class="form-label">New password</label><input asp-for="Password" class="form-control" /></div>
+            <div class="mb-4"><label class="form-label">Role</label><select asp-for="Role" class="form-select"><option>User</option><option>Admin</option></select></div>
+            <button class="btn btn-dark">Save Changes</button>
+            <a class="btn btn-outline-secondary" asp-action="Users">Cancel</a>
+        </form>
+    </div>
+</div>

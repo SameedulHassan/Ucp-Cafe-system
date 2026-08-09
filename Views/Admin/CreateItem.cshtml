@@ -1,0 +1,24 @@
+@model CafeItem
+@{
+    ViewData["Title"] = "Add Menu Item";
+}
+<div class="container py-5">
+    <div class="form-page">
+        <span class="eyebrow">ADMIN / MENU</span>
+        <h1>Add new item</h1>
+        <p class="text-muted">Upload an image directly from your computer.</p>
+        <form method="post" enctype="multipart/form-data" asp-action="CreateItem">
+            @Html.AntiForgeryToken()
+            <div class="mb-3"><label asp-for="Name" class="form-label">Item name</label><input asp-for="Name" class="form-control" required /></div>
+            <div class="mb-3"><label asp-for="Description" class="form-label">Description</label><textarea asp-for="Description" class="form-control" rows="3"></textarea></div>
+            <div class="row g-3">
+                <div class="col-md-6"><label asp-for="Category" class="form-label">Category</label><input asp-for="Category" class="form-control" placeholder="Burgers, Drinks..." required /></div>
+                <div class="col-md-6"><label asp-for="Price" class="form-label">Price (Rs.)</label><input asp-for="Price" class="form-control" type="number" step="0.01" min="0" required /></div>
+            </div>
+            <div class="mb-3 mt-3"><label class="form-label">Item image</label><input name="image" class="form-control" type="file" accept=".jpg,.jpeg,.png,.webp,.jfif" /></div>
+            <div class="form-check mb-4"><input asp-for="IsActive" class="form-check-input" checked /><label asp-for="IsActive" class="form-check-label">Show this item on the customer menu</label></div>
+            <button class="btn btn-gold">Add Item</button>
+            <a class="btn btn-outline-secondary" asp-action="Items">Cancel</a>
+        </form>
+    </div>
+</div>

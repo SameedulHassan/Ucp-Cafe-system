@@ -1,0 +1,24 @@
+@model CafeItem
+@{
+    ViewData["Title"] = "Edit Menu Item";
+}
+<div class="container py-5">
+    <div class="form-page">
+        <span class="eyebrow">ADMIN / MENU</span>
+        <h1>Edit item</h1>
+        <form method="post" enctype="multipart/form-data" asp-action="EditItem">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <div class="mb-3"><label asp-for="Name" class="form-label"></label><input asp-for="Name" class="form-control" required /></div>
+            <div class="mb-3"><label asp-for="Description" class="form-label"></label><textarea asp-for="Description" class="form-control" rows="3"></textarea></div>
+            <div class="row g-3">
+                <div class="col-md-6"><label asp-for="Category" class="form-label"></label><input asp-for="Category" class="form-control" /></div>
+                <div class="col-md-6"><label asp-for="Price" class="form-label"></label><input asp-for="Price" class="form-control" type="number" step="0.01" /></div>
+            </div>
+            <div class="mb-3 mt-3"><label class="form-label">Replace image</label><input name="image" class="form-control" type="file" accept=".jpg,.jpeg,.png,.webp,.jfif" /></div>
+            <div class="form-check mb-4"><input asp-for="IsActive" class="form-check-input" /><label asp-for="IsActive" class="form-check-label">Active on customer menu</label></div>
+            <button class="btn btn-dark">Save Changes</button>
+            <a class="btn btn-outline-secondary" asp-action="Items">Cancel</a>
+        </form>
+    </div>
+</div>

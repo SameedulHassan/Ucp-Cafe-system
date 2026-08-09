@@ -1,0 +1,48 @@
+@model IEnumerable<Deal>
+@{
+    ViewData["Title"] = "Manage Deals";
+    var dealItems = ViewBag.DealItems as List<DealItem> ?? new List<DealItem>();
+    var cafeItems = ViewBag.CafeItems as Dictionary<int, CafeItem> ?? new Dictionary<int, CafeItem>();
+}
+<div class="admin-shell">
+    <div class="container py-5">
+        <div class="admin-title-row">
+            <div><span class="eyebrow">ADMIN / DEALS</span><h1>Manage Deals</h1><p class="text-muted mb-0">Combine multiple menu items into one special offer for customers.</p></div>
+            <div><a class="btn btn-outline-dark me-2" asp-action="Dashboard">← Dashboard</a><a class="btn btn-gold" asp-action="CreateDeal">+ Make New Deal</a></div>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var deal in Model)
+            {
+                var components = dealItems.Where(x => x.DealId == deal.Id).ToList();
+                <div class="col-md-6 col-xl-4">
+                    <div class="admin-item-card h-100">
+                        @if (!string.IsNullOrWhiteSpace(deal.ImagePath))
+                        { <img src="@deal.ImagePath" alt="@deal.Name" /> }
+                        else { <div class="admin-item-placeholder">🎁</div> }
+                        <div class="p-3">
+                            <div class="d-flex justify-content-between gap-2"><h5>@deal.Name</h5><strong class="price">Rs. @deal.DealPrice.ToString("N0")</strong></div>
+                            <p class="text-muted small">@deal.Description</p>
+                            <div class="deal-items-list mb-3">
+                                @foreach (var component in components)
+                                {
+                                    if (cafeItems.ContainsKey(component.CafeItemId))
+                                    { <span>@component.Quantity × @cafeItems[component.CafeItemId].Name</span> }
+                                }
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="status-pill">@(deal.IsActive ? "Visible to users" : "Hidden")</span>
+                                <a class="btn btn-sm btn-outline-dark me-2" asp-action="EditDeal" asp-route-id="@deal.Id">Edit</a>
+                                <form class="d-inline" method="post" asp-action="DeleteDeal" onsubmit="return confirm('Delete this deal?');">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@deal.Id" />
+                                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

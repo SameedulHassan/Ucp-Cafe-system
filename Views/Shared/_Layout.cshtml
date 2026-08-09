@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - UCP Food Corner</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg cafe-nav sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-white" asp-controller="Home" asp-action="Index">
+                <span class="brand-icon">☕</span> UCP FOOD CORNER
+            </a>
+            <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Cafe" asp-action="Index">Menu</a></li>
+                    @if (Context.Session.GetInt32("UserId") != null)
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-controller="Cafe" asp-action="Cart">Cart 🛒</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Cafe" asp-action="Orders">My Orders</a></li>
+                        @if (Context.Session.GetString("UserRole") == "Admin")
+                        {
+                            <li class="nav-item"><a class="nav-link admin-link" asp-controller="Admin" asp-action="Dashboard">Admin Panel</a></li>
+                        }
+                        <li class="nav-item welcome-nav ms-lg-2"><span>Welcome, @Context.Session.GetString("UserName")</span></li>
+                        <li class="nav-item ms-lg-2"><a class="btn btn-light btn-sm px-3" asp-controller="Login" asp-action="Logout">Logout</a></li>
+                    }
+                    else
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-controller="Login" asp-action="SignIn">Login</a></li>
+                        <li class="nav-item"><a class="btn btn-gold btn-sm ms-lg-2 px-3" asp-controller="Login" asp-action="SignUp">Register</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        @if (TempData["Success"] != null)
+        {
+            <div class="container mt-3">
+                <div class="alert alert-success alert-dismissible fade show">@TempData["Success"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="container mt-3">
+                <div class="alert alert-danger alert-dismissible fade show">@TempData["Error"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+            </div>
+        }
+        @RenderBody()
+    </main>
+
+    <footer class="footer-cafe">
+        <div class="container py-4">
+            <div class="row">
+                <div class="col-md-7">
+                    <h5>UCP Food Corner</h5>
+                    <p class="mb-0">A campus cafe management system built with ASP.NET Core MVC and SQL Server.</p>
+                </div>
+                <div class="col-md-5 text-md-end">
+                    <p class="mb-0">Fresh food • Easy ordering • Happy students</p>
+                    <small>© 2026 UCP Food Corner</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

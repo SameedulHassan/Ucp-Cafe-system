@@ -1,0 +1,47 @@
+@model IEnumerable<Order>
+@{
+    ViewData["Title"] = "Manage Orders";
+    var users = ViewBag.Users as Dictionary<int, string> ?? new Dictionary<int, string>();
+}
+<div class="container py-5">
+    <div class="admin-title-row"><div><span class="eyebrow">ADMIN</span><h1>Orders</h1></div><a class="btn btn-outline-dark" asp-action="Dashboard">← Dashboard</a></div>
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead><tr><th>Order</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th><th>Update</th></tr></thead>
+                <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td><strong>#@order.Id</strong></td>
+                        <td>@(users.ContainsKey(order.UserId) ? users[order.UserId] : "User")</td>
+                        <td>@order.OrderDate.ToString("dd MMM yyyy hh:mm tt")</td>
+                        <td>Rs. @order.TotalAmount.ToString("N0")</td>
+                        <td><span class="status-pill">@order.Status</span></td>
+                        <td>
+                            <form method="post" asp-action="UpdateOrderStatus" class="d-flex gap-2">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@order.Id" />
+                                <select class="form-select form-select-sm" name="status">
+                                    @foreach (var s in new[] { "Pending", "Preparing", "Ready", "Completed", "Cancelled" })
+                                    {
+                                        if (order.Status == s)
+                                        {
+                                            <option selected>@s</option>
+                                        }
+                                        else
+                                        {
+                                            <option>@s</option>
+                                        }
+                                    }
+                                </select>
+                                <button class="btn btn-sm btn-dark">Save</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

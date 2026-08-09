@@ -1,0 +1,15 @@
+@model Deal
+@{
+    ViewData["Title"] = Model.Name;
+    var components = ViewBag.Components as List<DealComponent> ?? new List<DealComponent>();
+    decimal regular = ViewBag.RegularTotal ?? 0m; decimal saving = ViewBag.Saving ?? 0m; bool unavailable = ViewBag.Unavailable ?? false;
+    var loggedIn = Context.Session.GetInt32("UserId") != null;
+}
+<div class="container py-5"><div class="row g-5 align-items-start">
+<div class="col-lg-6">@if (!string.IsNullOrWhiteSpace(Model.ImagePath)) { <img src="@Model.ImagePath" class="img-fluid rounded-4 shadow" alt="@Model.Name" /> } else { <div class="deal-placeholder rounded-4">🎁</div> }</div>
+<div class="col-lg-6"><span class="deal-badge">SPECIAL DEAL</span><h1 class="mt-3">@Model.Name</h1><p class="lead text-muted">@Model.Description</p>
+<h4 class="mt-4">What's included</h4><ul class="list-group mb-4">@foreach(var c in components){<li class="list-group-item d-flex justify-content-between"><span>@c.Quantity × @c.Item.Name</span><span>Rs. @((c.Item.Price*c.Quantity).ToString("N0"))</span></li>}</ul>
+<div class="text-muted">Regular total: <s>Rs. @regular.ToString("N0")</s></div><div class="price-large">Rs. @Model.DealPrice.ToString("N0")</div>@if(saving>0){<div class="text-success fw-semibold mb-3">You save Rs. @saving.ToString("N0")</div>}
+@if(unavailable){<div class="alert alert-warning">One or more items in this deal are unavailable today.</div>}
+@if(loggedIn && !unavailable){<div class="deal-order-box mb-3"><label class="form-label fw-semibold">Quantity</label><input id="detailDealQty" class="form-control" type="number" min="1" value="1"/></div><div class="d-grid gap-2"><form method="post" asp-action="AddDealToCart">@Html.AntiForgeryToken()<input type="hidden" name="id" value="@Model.Id"/><input type="hidden" name="quantity" id="detailCartQty" value="1"/><button class="btn btn-dark btn-lg w-100" onclick="document.getElementById('detailCartQty').value=document.getElementById('detailDealQty').value">🛒 ADD DEAL TO CART</button></form><form method="post" asp-action="BuyDealNow">@Html.AntiForgeryToken()<input type="hidden" name="id" value="@Model.Id"/><input type="hidden" name="quantity" id="detailBuyQty" value="1"/><button class="btn btn-gold btn-lg w-100" onclick="document.getElementById('detailBuyQty').value=document.getElementById('detailDealQty').value">⚡ ORDER DEAL NOW</button></form></div>} else if(!loggedIn){<a class="btn btn-dark btn-lg w-100" asp-controller="Login" asp-action="SignIn">Sign in to order</a>}
+<a class="btn btn-link mt-3" asp-controller="Home" asp-action="Index">← Back to deals</a></div></div></div>

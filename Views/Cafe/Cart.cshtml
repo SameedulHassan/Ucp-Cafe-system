@@ -1,0 +1,69 @@
+@model List<CartItem>
+@{
+    ViewData["Title"] = "Cart";
+    var total = Model.Sum(x => x.Price * x.Quantity);
+}
+<div class="container py-5">
+    <div class="section-heading text-start">
+        <span>YOUR ORDER</span>
+        <h1>Shopping cart</h1>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">🛒</div>
+            <h3>Your cart is empty</h3>
+            <p class="text-muted">Add something delicious from the menu.</p>
+            <a class="btn btn-dark" asp-action="Index">Browse Menu</a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            <div class="col-lg-8">
+                @foreach (var item in Model)
+                {
+                    <div class="cart-row">
+                        @if (!string.IsNullOrWhiteSpace(item.ImagePath))
+                        {
+                            <img src="@item.ImagePath" alt="@item.Name" />
+                        }
+                        else
+                        {
+                            <div class="cart-placeholder">☕</div>
+                        }
+                        <div class="flex-grow-1">
+                            <h5 class="mb-1">@item.Name @if(item.IsDeal){<span class="badge bg-warning text-dark">DEAL</span>}</h5>
+                            <span class="text-muted">Rs. @item.Price.ToString("N0") each</span>
+                        </div>
+                        <form method="post" asp-action="UpdateCart" class="d-flex gap-2 align-items-center">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.ItemId" />
+                            <input class="form-control quantity-input" type="number" name="quantity" value="@item.Quantity" min="1" />
+                            <button class="btn btn-outline-dark">Update</button>
+                        </form>
+                        <form method="post" asp-action="RemoveFromCart">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.ItemId" />
+                            <button class="btn btn-outline-danger">Remove</button>
+                        </form>
+                    </div>
+                }
+            </div>
+            <div class="col-lg-4">
+                <div class="summary-card">
+                    <h4>Order summary</h4>
+                    <div class="summary-line"><span>Items</span><span>@Model.Sum(x => x.Quantity)</span></div>
+                    <div class="summary-line"><span>Subtotal</span><strong>Rs. @total.ToString("N0")</strong></div>
+                    <hr />
+                    <div class="summary-line total"><span>Total</span><strong>Rs. @total.ToString("N0")</strong></div>
+                    <form method="post" asp-action="Checkout" class="mt-4">
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-gold btn-lg w-100">Place Order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>

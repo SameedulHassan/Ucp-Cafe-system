@@ -1,0 +1,91 @@
+@model CafeItem
+@{
+    ViewData["Title"] = Model.Name;
+    var reviews = ViewBag.Reviews as List<Review> ?? new List<Review>();
+    var users = ViewBag.Users as Dictionary<int, string> ?? new Dictionary<int, string>();
+}
+<div class="container py-5">
+    <a class="back-link" asp-action="Index">← Back to menu</a>
+    <div class="row g-5 align-items-start mt-2">
+        <div class="col-lg-6">
+            @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
+            {
+                <img src="@Model.ImagePath" class="detail-image" alt="@Model.Name" />
+            }
+            else
+            {
+                <div class="detail-placeholder">☕</div>
+            }
+        </div>
+        <div class="col-lg-6">
+            <span class="category-label">@Model.Category</span>
+            <h1 class="display-5 fw-bold mt-2">@Model.Name</h1>
+            <div class="price-large mb-3">Rs. @Model.Price.ToString("N0")</div>
+            <p class="lead text-muted">@Model.Description</p>
+
+            <form method="post" asp-action="AddToCart" class="d-flex gap-2 mt-4">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.Id" />
+                <input class="form-control" style="max-width:110px" type="number" min="1" name="quantity" value="1" />
+                <button class="btn btn-dark px-4">Add to Cart</button>
+            </form>
+
+            <div class="feature-strip mt-4">
+                <span>✓ Freshly prepared</span>
+                <span>✓ Campus pickup</span>
+                <span>✓ Reviews</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-5">
+        <div class="col-lg-7">
+            <div class="content-card">
+                <h3>Customer reviews</h3>
+                @if (!reviews.Any())
+                {
+                    <p class="text-muted mt-3">No reviews yet. Be the first to review this item.</p>
+                }
+                @foreach (var review in reviews)
+                {
+                    <div class="review-row">
+                        <div class="d-flex justify-content-between">
+                            <strong>@(users.ContainsKey(review.UserId) ? users[review.UserId] : "Customer")</strong>
+                            <span class="rating">@("★".PadRight(review.Rating, '★'))</span>
+                        </div>
+                        <p class="mb-1">@review.Comment</p>
+                        <small class="text-muted">@review.CreatedAt.ToString("dd MMM yyyy")</small>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="content-card" id="review">
+                <h3>⭐ Leave a review</h3>
+                @if (Context.Session.GetInt32("UserId") != null)
+                {
+                    <form method="post" asp-action="Review" class="mt-3">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="itemId" value="@Model.Id" />
+                        <label class="form-label">Rating</label>
+                        <select name="rating" class="form-select mb-3">
+                            <option value="5">★★★★★ - Excellent</option>
+                            <option value="4">★★★★☆ - Very good</option>
+                            <option value="3">★★★☆☆ - Good</option>
+                            <option value="2">★★☆☆☆ - Fair</option>
+                            <option value="1">★☆☆☆☆ - Poor</option>
+                        </select>
+                        <label class="form-label">Comment</label>
+                        <textarea name="comment" class="form-control mb-3" rows="4" placeholder="How was it?"></textarea>
+                        <button class="btn btn-gold w-100">Submit Review</button>
+                    </form>
+                }
+                else
+                {
+                    <p class="text-muted mt-3">Sign in to leave a review.</p>
+                    <a class="btn btn-dark" asp-controller="Login" asp-action="SignIn">Sign in</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>

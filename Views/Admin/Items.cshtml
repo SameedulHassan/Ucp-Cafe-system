@@ -1,0 +1,35 @@
+@model IEnumerable<CafeItem>
+@{
+    ViewData["Title"] = "Manage Menu";
+}
+<div class="container py-5">
+    <div class="admin-title-row">
+        <div><span class="eyebrow">ADMIN</span><h1>Menu items</h1></div>
+        <div><a class="btn btn-outline-dark me-2" asp-action="Dashboard">← Dashboard</a><a class="btn btn-gold" asp-action="CreateItem">+ Add New Item</a></div>
+    </div>
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 col-xl-4">
+                <div class="admin-item-card">
+                    @if (!string.IsNullOrWhiteSpace(item.ImagePath))
+                    { <img src="@item.ImagePath" alt="@item.Name" /> }
+                    else { <div class="admin-item-placeholder">🍔</div> }
+                    <div class="p-3">
+                        <div class="d-flex justify-content-between"><h5>@item.Name</h5><strong>Rs. @item.Price.ToString("N0")</strong></div>
+                        <div class="small text-muted mb-3">@item.Category • @(item.IsActive ? "Active" : "Hidden")</div>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a class="btn btn-sm btn-outline-dark" asp-action="EditItem" asp-route-id="@item.Id">Edit</a>
+                            <a class="btn btn-sm btn-outline-primary" asp-action="Availability" asp-route-id="@item.Id">Daily Availability</a>
+                            <form method="post" asp-action="DeleteItem" onsubmit="return confirm('Delete this item?');">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
