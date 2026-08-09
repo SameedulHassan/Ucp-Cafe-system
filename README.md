@@ -46,6 +46,30 @@ The supplied UCP Food Corner image is used as the main site background under:
 
 `wwwroot/images/ucp-food-corner.jfif`
 
+## Screenshots
+
+Below are the repository images for quick reference (these files must exist in the repository root or the paths below):
+
+### Home page
+
+![Home page](./home%20page.png)
+
+### Customer page
+
+![Customer page](./customer%20page.png)
+
+### Login page
+
+![Login page](./login%20page.png)
+
+### Menu page
+
+![Menu page](./menu%20page.png)
+
+### Special offers
+
+![Special offers](./special%20offers.png)
+
 ## Note
 
 This project uses the simple username/password structure from the original educational project. For production use, replace plain-text passwords with ASP.NET Core Identity/password hashing.
