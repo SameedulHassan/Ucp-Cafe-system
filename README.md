@@ -31,7 +31,7 @@ Set an existing user to admin in SQL Server:
 
 ```sql
 USE FirstDB;
-UPDATE Users SET Role = 'Admin' WHERE Email = 'sameed@gmail.com';
+UPDATE Users SET Role = 'Admin' WHERE Email = 'Your admin email';
 ```
 
 The admin can create a deal by selecting multiple menu items, choosing quantities, setting a deal price, uploading a deal image and publishing it to the customer home page.
